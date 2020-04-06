@@ -36,6 +36,7 @@ class BuilderData<T>(
     var shouldStatusBarHide = true
     var isZoomingAllowed = true
     var isSwipeToDismissAllowed = true
+    @Transient
     var transitionView: ImageView? = null
     var imageFullFocusEnabled = false
 }

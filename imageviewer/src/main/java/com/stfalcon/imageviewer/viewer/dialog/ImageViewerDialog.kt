@@ -73,6 +73,11 @@ class ImageViewerDialog<T>: DialogFragment() {
         return dialog
     }
 
+    override fun onResume() {
+        super.onResume()
+        setupViewerView()
+    }
+
     fun show(fragmentManager: FragmentManager, animate: Boolean) {
         animateOpen = animate
         show(fragmentManager, "")
@@ -118,15 +123,22 @@ class ImageViewerDialog<T>: DialogFragment() {
     }
 
     private fun setupViewerView() {
-        viewerView = ImageViewerView(requireContext())
+        if (!::viewerView.isInitialized) {
+            viewerView = ImageViewerView(requireContext())
+        }
         viewerView.apply {
             isZoomingAllowed = builderData.isZoomingAllowed
             isSwipeToDismissAllowed = builderData.isSwipeToDismissAllowed
 
             containerPadding = builderData.containerPaddingPixels
             imagesMargin = builderData.imageMarginPixels
-            overlayView = ((targetFragment ?: activity) as? OverlayLoader<T>)?.loadOverlayFor(max(viewerView.currentPosition, builderData.startPosition),
-                this@ImageViewerDialog)
+            if (overlayView == null) {
+                overlayView = ((targetFragment ?: activity) as? OverlayLoader<T>)?.loadOverlayFor(max(viewerView.currentPosition, builderData.startPosition),
+                    this@ImageViewerDialog)
+            } else {
+                ((targetFragment ?: activity) as? OverlayLoader<T>)?.notifyExistingOverlay(overlayView,
+                    this@ImageViewerDialog)
+            }
             imageFullFocusEnabled = builderData.imageFullFocusEnabled
 
             setBackgroundColor(builderData.backgroundColor)

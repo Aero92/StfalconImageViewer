@@ -1,10 +1,10 @@
 package com.stfalcon.imageviewer.loader;
 
 import android.view.View;
-import android.widget.ImageView;
 
-import com.stfalcon.imageviewer.StfalconImageViewer;
 import com.stfalcon.imageviewer.viewer.dialog.ImageViewerDialog;
+
+import kotlin.Unit;
 
 /**
  * Interface definition for a callback to be invoked when the overlay should be loaded
@@ -17,4 +17,6 @@ public interface OverlayLoader<T> {
      *
      */
     View loadOverlayFor(int position, ImageViewerDialog<T> viewer);
+
+    Unit notifyExistingOverlay(View overlay, ImageViewerDialog<T> viewer);
 }
