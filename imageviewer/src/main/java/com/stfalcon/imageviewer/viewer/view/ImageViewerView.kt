@@ -103,7 +103,7 @@ class ImageViewerView<T> @JvmOverloads constructor(
     private var imagesAdapter: ImagesPagerAdapter<T>? = null
 
     private var directionDetector: SwipeDirectionDetector
-    private var gestureDetector: GestureDetectorCompat
+    private var gestureDetector: GestureDetectorCompat? = null
     private var scaleDetector: ScaleGestureDetector
     private lateinit var swipeDismissHandler: SwipeToDismissHandler
 
@@ -187,6 +187,14 @@ class ImageViewerView<T> @JvmOverloads constructor(
     override fun setBackgroundColor(color: Int) {
         findViewById<View>(R.id.backgroundView).setBackgroundColor(color)
         setBackgroundColor = color
+    }
+
+    fun disableGestureDetector() {
+        gestureDetector = null
+    }
+
+    fun enableGestureDetector() {
+        gestureDetector = createGestureDetector()
     }
 
     internal fun setImages(images: List<T>, startPosition: Int, imageLoader: ImageLoader<T>) {
@@ -298,7 +306,7 @@ class ImageViewerView<T> @JvmOverloads constructor(
         }
 
         scaleDetector.onTouchEvent(event)
-        gestureDetector.onTouchEvent(event)
+        gestureDetector?.onTouchEvent(event)
     }
 
     private fun handleEventActionDown(event: MotionEvent) {

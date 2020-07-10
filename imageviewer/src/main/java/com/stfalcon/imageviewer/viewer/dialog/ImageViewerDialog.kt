@@ -36,8 +36,9 @@ import kotlin.math.max
 
 class ImageViewerDialog<T>: DialogFragment() {
 
+    lateinit var viewerView: ImageViewerView<T>
+
     private lateinit var dialog: AlertDialog
-    private lateinit var viewerView: ImageViewerView<T>
     private var animateOpen = true
     private lateinit var builderData: BuilderData<T>
 
@@ -75,7 +76,7 @@ class ImageViewerDialog<T>: DialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        setupViewerView()
+        setupViewerView(onResume = true)
     }
 
     fun show(fragmentManager: FragmentManager, animate: Boolean) {
@@ -122,7 +123,7 @@ class ImageViewerDialog<T>: DialogFragment() {
         return false
     }
 
-    private fun setupViewerView() {
+    private fun setupViewerView(onResume: Boolean = false) {
         if (!::viewerView.isInitialized) {
             viewerView = ImageViewerView(requireContext())
         }
@@ -141,10 +142,13 @@ class ImageViewerDialog<T>: DialogFragment() {
             }
             imageFullFocusEnabled = builderData.imageFullFocusEnabled
 
-            setBackgroundColor(builderData.backgroundColor)
+            if (!onResume) {
+                setBackgroundColor(builderData.backgroundColor)
+            }
             val imageLoader = (targetFragment ?: activity) as? ImageLoader<T>
             if (imageLoader != null) {
-                setImages(builderData.images, builderData.startPosition, imageLoader)
+                val position = if (onResume) getCurrentPosition() else builderData.startPosition
+                setImages(builderData.images, position, imageLoader)
             }
 
             onPageChange = { position -> ((targetFragment ?: activity) as? OnImageChangeListener)?.onImageChange(position) }
