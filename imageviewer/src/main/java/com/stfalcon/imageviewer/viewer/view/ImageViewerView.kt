@@ -210,7 +210,7 @@ class ImageViewerView<T> @JvmOverloads constructor(
 
         externalTransitionImageView = transitionImageView
 
-        imageLoader?.loadImage(this.transitionImageView, images[startPosition])
+        imageLoader?.loadImage(this.transitionImageView, images.getOrNull(startPosition))
         this.transitionImageView.copyBitmapFrom(transitionImageView)
 
         transitionImageAnimator = createTransitionImageAnimator(transitionImageView)
