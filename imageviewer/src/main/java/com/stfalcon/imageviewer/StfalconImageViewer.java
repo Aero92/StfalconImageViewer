@@ -57,13 +57,18 @@ public class StfalconImageViewer<T> {
         show(fragmentManager, true);
     }
 
+    public void show(FragmentManager fragmentManager, boolean animate) {
+        show(fragmentManager, true, false);
+    }
+
     /**
      * Displays the built viewer if passed list of images is not empty
      *
      * @param animate whether the passed transition view should be animated on open. Useful for screen rotation handling.
+     * @param allowEmpty whether the image list is allowed to be empty, otherwise dialog will only show when items are present.
      */
-    public void show(FragmentManager fragmentManager, boolean animate) {
-        if (!builderData.getImages().isEmpty()) {
+    public void show(FragmentManager fragmentManager, boolean animate, boolean allowEmpty) {
+        if (allowEmpty || !builderData.getImages().isEmpty()) {
             dialog.show(fragmentManager, animate);
         } else {
             Log.w(context.getString(R.string.library_name),
@@ -316,7 +321,20 @@ public class StfalconImageViewer<T> {
          */
         public StfalconImageViewer<T> show(FragmentManager fragmentManager, boolean animate) {
             StfalconImageViewer<T> viewer = build();
-            viewer.show(fragmentManager, animate);
+            viewer.show(fragmentManager, animate, false);
+            return viewer;
+        }
+
+        /**
+         * Creates the {@link StfalconImageViewer} with the arguments supplied to this builder and
+         * shows the dialog.
+         *
+         * @param animate whether the passed transition view should be animated on open. Useful for screen rotation handling.
+         * @param allowEmpty whether the image list is allowed to be empty, otherwise dialog will only show when items are present.
+         */
+        public StfalconImageViewer<T> show(FragmentManager fragmentManager, boolean animate, boolean allowEmpty) {
+            StfalconImageViewer<T> viewer = build();
+            viewer.show(fragmentManager, animate, allowEmpty);
             return viewer;
         }
     }
