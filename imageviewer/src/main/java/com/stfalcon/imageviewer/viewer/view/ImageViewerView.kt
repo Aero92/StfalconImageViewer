@@ -187,6 +187,10 @@ class ImageViewerView<T> @JvmOverloads constructor(
     override fun setBackgroundColor(color: Int) {
         findViewById<View>(R.id.backgroundView).setBackgroundColor(color)
         setBackgroundColor = color
+        // Make sure background isn't transparent if there's no transition image.
+        if (externalTransitionImageView == null) {
+            findViewById<View>(R.id.backgroundView).alpha = 1f
+        }
     }
 
     fun disableGestureDetector() {
